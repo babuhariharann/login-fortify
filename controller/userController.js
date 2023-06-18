@@ -17,8 +17,6 @@ export const verifyUser = async (req, res, next) => {
 
     const { username } = req.method == "GET" ? req.query : req.body;
 
-    console.log(username);
-
     // check the username existence
 
     let existingUser = await UserModel.findOne({ username });
@@ -131,10 +129,8 @@ export const authenticate = async (req, res) => res.end();
 
 export const login = async (req, res) => {
   const { username, password } = req.body;
-
   try {
     // find username in db
-
     const findUsername = await UserModel.findOne({ username });
 
     if (!findUsername) {
@@ -142,7 +138,6 @@ export const login = async (req, res) => {
     }
 
     // compare password with hashed password
-
     const comparePassword = await bcrypt.compare(
       password,
       findUsername.password
@@ -152,7 +147,7 @@ export const login = async (req, res) => {
       return res.status(404).send({ error: "Password does not match" });
     }
 
-    // token generate (payload, secretkey,expires)
+    // token generation (payload, secretkey, expires)
     const token = jwt.sign(
       {
         userId: findUsername._id,
@@ -163,14 +158,13 @@ export const login = async (req, res) => {
     );
 
     return res.status(200).send({
-      msg: "Login in successfully",
+      msg: "Login successful",
       username: findUsername.username,
       token,
     });
-
-    // pass
   } catch (error) {
-    return res.status(500).send({ error });
+    console.error("An error occurred:", error);
+    return res.status(500).send({ error: "Internal Server Error" });
   }
 };
 
