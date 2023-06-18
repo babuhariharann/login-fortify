@@ -23,7 +23,7 @@ dotenv.config();
 
 /** PORT Define */
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8002;
 const URL = process.env.MONGO_URL;
 
 connection(URL);
